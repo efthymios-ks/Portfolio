@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Efthymios Koktsidis</title>
+  <style>
+    /* ── Tokens ── */
+    [data-theme="light"] {
+      --bg:              #f5f6f8;
+      --surface:         #ffffff;
+      --border:          #e4e7ec;
+      --text:            #1a1e27;
+      --muted:           #6b7280;
+      --accent:          #2563eb;
+      --tag-bg:          #eff6ff;
+      --tag-text:        #1d4ed8;
+      --tag-on-bg:       #2563eb;
+      --tag-on-text:     #ffffff;
+      --shadow:          0 1px 4px rgba(0,0,0,0.07);
+      --shadow-hover:    0 4px 12px rgba(0,0,0,0.10);
+    }
+
+    [data-theme="dark"] {
+      --bg:              #0d1117;
+      --surface:         #161b22;
+      --border:          #30363d;
+      --text:            #e6edf3;
+      --muted:           #8b949e;
+      --accent:          #58a6ff;
+      --tag-bg:          #1a2332;
+      --tag-text:        #79c0ff;
+      --tag-on-bg:       #388bfd;
+      --tag-on-text:     #ffffff;
+      --shadow:          0 1px 4px rgba(0,0,0,0.3);
+      --shadow-hover:    0 4px 14px rgba(0,0,0,0.45);
+    }
+
+    /* ── Reset ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background 0.2s, color 0.2s;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0.7rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .site-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+
+    .theme-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: none;
+      color: var(--muted);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .theme-btn:hover { color: var(--text); border-color: var(--muted); }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 880px;
+      margin: 3rem auto 2.5rem;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+
+    .hero img {
+      width: 78px;
+      height: 78px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      flex-shrink: 0;
+      background: var(--border);
+    }
+
+    .hero-body h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.2rem;
+    }
+
+    .hero-role {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-bio {
+      font-size: 0.88rem;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.65;
+    }
+
+    @media (max-width: 520px) {
+      .hero { flex-direction: column; align-items: flex-start; gap: 1rem; margin-top: 2rem; }
+    }
+
+    /* ── Filters ── */
+    .filters {
+      max-width: 880px;
+      margin: 0 auto 1rem;
+      padding: 0 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .search {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search::placeholder { color: var(--muted); }
+    .search:focus { border-color: var(--accent); }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .tag {
+      padding: 0.22rem 0.65rem;
+      border-radius: 99px;
+      font-size: 0.76rem;
+      font-weight: 500;
+      cursor: pointer;
+      user-select: none;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      transition: background 0.15s, color 0.15s;
+      border: none;
+    }
+    .tag:hover, .tag.on { background: var(--tag-on-bg); color: var(--tag-on-text); }
+
+    /* ── Count ── */
+    .count {
+      max-width: 880px;
+      margin: 0 auto 0.75rem;
+      padding: 0 1.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* ── Grid ── */
+    .grid {
+      max-width: 880px;
+      margin: 0 auto 5rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(265px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      box-shadow: var(--shadow);
+      transition: box-shadow 0.2s, border-color 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .card-name {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--accent);
+      word-break: break-word;
+    }
+
+    .card-desc {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.28rem;
+      margin-top: 0.2rem;
+    }
+
+    .card-tag {
+      padding: 0.13rem 0.48rem;
+      border-radius: 99px;
+      font-size: 0.71rem;
+      background: var(--tag-bg);
+      color: var(--tag-text);
+    }
+
+    /* ── States ── */
+    .state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 3.5rem 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <span class="site-title">efthymios-ks</span>
+  <button class="theme-btn" id="themeBtn">
+    <span id="themeIcon"></span>
+    <span id="themeLabel"></span>
+  </button>
+</header>
+
+<section class="hero">
+  <img id="avatar" src="" alt="">
+  <div class="hero-body">
+    <h1 id="heroName"></h1>
+    <div class="hero-role">Principal Software Engineer</div>
+    <p class="hero-bio">
+      Deep expertise in .NET, ASP.NET Core and Azure. Focused on system design,
+      microservices architecture, and end-to-end delivery of complex, distributed systems.
+    </p>
+  </div>
+</section>
+
+<div class="filters">
+  <input class="search" id="search" type="search" placeholder="Search by name or description…" autocomplete="off">
+  <div class="tag-row" id="tagRow"></div>
+</div>
+
+<div class="count" id="count"></div>
+<div class="grid" id="grid"><div class="state">Loading…</div></div>
+
+<script src="data.js"></script>
+<script>
+  // ── Theme ────────────────────────────────────────────────────────────────
+  const btn   = document.getElementById('themeBtn');
+  const icon  = document.getElementById('themeIcon');
+  const lbl   = document.getElementById('themeLabel');
+  const root  = document.documentElement;
+
+  let theme = localStorage.getItem('theme')
+    || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+  function applyTheme(t) {
+    theme = t;
+    root.setAttribute('data-theme', t);
+    const going = t === 'dark' ? 'light' : 'dark';
+    icon.textContent = going === 'light' ? '☀️' : '🌙';
+    lbl.textContent  = going === 'light' ? 'Light' : 'Dark';
+    localStorage.setItem('theme', t);
+  }
+
+  applyTheme(theme);
+  btn.addEventListener('click', () => applyTheme(theme === 'dark' ? 'light' : 'dark'));
+
+  // ── Data ─────────────────────────────────────────────────────────────────
+  const USERNAME = 'efthymios-ks';
+  let repos = [], activeTag = null;
+
+  async function load() {
+    const [userRes, reposRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${USERNAME}`),
+      fetch(`https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=pushed`, {
+        headers: { Accept: 'application/vnd.github+json' }
+      })
+    ]);
+
+    const user = await userRes.json();
+    document.getElementById('avatar').src = user.avatar_url;
+    document.getElementById('avatar').alt = user.name;
+    document.getElementById('heroName').textContent = user.name;
+
+    const all = await reposRes.json();
+    repos = all
+      .filter(r => !r.private && r.description && REPO_LISTS[r.name])
+      .map(r => ({ ...r, lists: REPO_LISTS[r.name] }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    buildTags();
+    render();
+  }
+
+  function buildTags() {
+    const set = new Set();
+    repos.forEach(r => r.lists.forEach(l => set.add(l)));
+    const row = document.getElementById('tagRow');
+    [...set].sort().forEach(t => {
+      const el = document.createElement('button');
+      el.className = 'tag';
+      el.textContent = t;
+      el.addEventListener('click', () => {
+        activeTag = activeTag === t ? null : t;
+        row.querySelectorAll('.tag').forEach(b => b.classList.toggle('on', b.textContent === activeTag));
+        render();
+      });
+      row.appendChild(el);
+    });
+  }
+
+  function render() {
+    const q = document.getElementById('search').value.trim().toLowerCase();
+    const filtered = repos.filter(r => {
+      const text = !q || r.name.toLowerCase().includes(q) || r.description.toLowerCase().includes(q);
+      const tag  = !activeTag || r.lists.includes(activeTag);
+      return text && tag;
+    });
+
+    document.getElementById('count').textContent =
+      `${filtered.length} repo${filtered.length !== 1 ? 's' : ''}`;
+
+    const grid = document.getElementById('grid');
+    if (!filtered.length) {
+      grid.innerHTML = '<div class="state">No repos match your search.</div>';
+      return;
+    }
+
+    grid.innerHTML = filtered.map(r => `
+      <a class="card" href="${r.html_url}" target="_blank" rel="noopener noreferrer">
+        <div class="card-name">${r.name}</div>
+        <div class="card-desc">${r.description}</div>
+        <div class="card-tags">${r.lists.map(l => `<span class="card-tag">${l}</span>`).join('')}</div>
+      </a>
+    `).join('');
+  }
+
+  document.getElementById('search').addEventListener('input', render);
+
+  load().catch(() => {
+    document.getElementById('grid').innerHTML = '<div class="state">Failed to load repositories.</div>';
+  });
+</script>
+
+<script>
+  // iOS zooms any focused input/select/textarea with font-size < 16px — this raises it to prevent that.
+  (() => {
+    const MINIMUM_FONT_SIZE_PX = 16;
+    const FORM_FIELD_SELECTOR = 'input:not([type=hidden]), select, textarea';
+    const IOS_DEVICE_NAMES = ['iPhone', 'iPad', 'iPod'];
+
+    const isIPadOnIOS13Plus =
+      navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+
+    const isIOSDevice =
+      IOS_DEVICE_NAMES.some(deviceName => navigator.userAgent.includes(deviceName)) ||
+      isIPadOnIOS13Plus;
+
+    if (!isIOSDevice) {
+      return;
+    }
+
+    const raiseFontSizeIfTooSmall = formField => {
+      const currentFontSize = parseFloat(getComputedStyle(formField).fontSize);
+      if (currentFontSize < MINIMUM_FONT_SIZE_PX) {
+        formField.style.fontSize = `${MINIMUM_FONT_SIZE_PX}px`;
+      }
+    };
+
+    const fixFormFieldsWithin = element => {
+      if (element.nodeType !== Node.ELEMENT_NODE) {
+        return;
+      }
+      if (element.matches?.(FORM_FIELD_SELECTOR)) {
+        raiseFontSizeIfTooSmall(element);
+      }
+      element.querySelectorAll?.(FORM_FIELD_SELECTOR).forEach(raiseFontSizeIfTooSmall);
+    };
+
+    const watchForNewFormFields = () => {
+      fixFormFieldsWithin(document.body);
+      const documentObserver = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+          mutation.addedNodes.forEach(fixFormFieldsWithin);
+        });
+      });
+      documentObserver.observe(document.body, { childList: true, subtree: true });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', watchForNewFormFields);
+    } else {
+      watchForNewFormFields();
+    }
+  })();
+</script>
+
+</body>
+</html>
