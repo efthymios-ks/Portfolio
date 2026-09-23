@@ -2,6 +2,7 @@
 const REPO_LISTS = {
   "Business.Rules": [".NET"],
   "Jobs": [".NET"],
+  "MessageBus": [".NET"],
   "Microsoft.AspNetCore.MinimalApis": [".NET"],
   "Microsoft.AspNetCore.Modules": [".NET"],
   "Microsoft.EntityFrameworkCore.Utilities": [".NET"],
