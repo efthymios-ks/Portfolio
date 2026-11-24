@@ -1,0 +1,37 @@
+name: Build portfolio
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # every Monday at 06:00 UTC
+  workflow_dispatch:       # manual trigger
+  push:                    # rebuild when the template or build script changes
+    branches: [main]
+    paths:
+      - template.html
+      - scripts/build.py
+      - .github/workflows/refresh.yml
+
+concurrency:
+  group: build-portfolio
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build index.html from template + GitHub data
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/build.py
+
+      - name: Commit if changed
+        run: |
+          git config user.name "Efthymios Koktsidis"
+          git config user.email "24625287+efthymios-ks@users.noreply.github.com"
+          git add index.html
+          git diff --staged --quiet || (git commit -m "chore: rebuild portfolio" && git push)
